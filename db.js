@@ -33,4 +33,8 @@ DB.delete = function (uuid) {
   return Timer.remove({uuid}).exec();
 };
 
+DB.getAll = function () {
+  return Timer.find().exec();
+};
+
 module.exports = DB;

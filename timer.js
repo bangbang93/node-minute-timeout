@@ -18,6 +18,7 @@ exports.setup = function (host, name, tickFunction) {
   clearInterval(interval);
   interval = setInterval(onInterval, 60 * 1000);
   db = require('./db')(host, name);
+  restore();
 };
 
 exports.add = function (startTime, endTime, data, uuid) {
@@ -32,14 +33,28 @@ exports.stop = function (uuid) {
   timer.splice(_.findIndex(timer, {uuid}), 1);
 };
 
+exports.count = function () {
+  return timer.length;
+};
+
 function onInterval(){
   let now = new Date();
   timer.map((e)=>{
-    if (e.endTime < now){
+    if (e.endTime <= now){
+      db.delete(e.uuid);
       onTick(e.data);
       return null;
     }
     return e;
   });
   timer = _.without(timer);
+}
+
+function restore(){
+  db.getAll()
+    .then((timers)=>{
+      timers.forEach((e)=>{
+        timer.push(e.toJSON());
+      })
+    })
 }
