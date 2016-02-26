@@ -46,7 +46,7 @@ function onInterval(){
       return null;
     }
     return e;
-  }));
+  }), null);
 }
 
 function restore(){
