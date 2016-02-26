@@ -39,15 +39,14 @@ exports.count = function () {
 
 function onInterval(){
   let now = new Date();
-  timer.map((e)=>{
+  timer = _.without(timer.map((e)=>{
     if (e.endTime <= now){
       db.delete(e.uuid);
       onTick(e.data);
       return null;
     }
     return e;
-  });
-  timer = _.without(timer);
+  }));
 }
 
 function restore(){
